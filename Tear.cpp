@@ -1,22 +1,30 @@
 #pragma once
 #include "SFML/Graphics.hpp"
-#include "Entity.h"
-#include "Enums.h"
 #include "Tear.h"
 
 void Tear::update()
 {
-	pos += vel;
+	frames++;
+	if (splat.isPlaying) {
+		sprite = splat.frames[splat.currentFrame].getSprite();
+		sprite.setPosition(pos - splat.frames[splat.currentFrame].offSet);
+	}
+	else {
+		pos += vel;
+		sprite.setPosition(pos - sf::Vector2f(0, 36 + (range / 5)));
+	}
 	range -= 0.5;
-	sprite.setPosition(pos);
 };
 
-Tear::Tear(sf::Vector2f ppos, sf::Vector2f vvel, double damage, double rrange, TearFlag tf, sf::Sprite ssprite)
+Tear::Tear(sf::Vector2f ppos, sf::Vector2f vvel, double damage, double rrange, TearFlag tf, sf::Sprite& __sprite, Animation& tearSplat)
 {
 	pos = ppos;
 	vel = vvel;
 	dmg = damage;
 	range = rrange;
 	entityID = tear;
-	sprite = ssprite;
+	sprite = __sprite;
+	sprite.setTextureRect(sf::IntRect(160, 0, 32, 32));
+
+	splat = tearSplat;
 };

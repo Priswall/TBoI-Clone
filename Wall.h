@@ -13,5 +13,5 @@ public:
 
 	Wall(int, int, WallID, sf::Sprite&);
 
-	void update(Player&);
+	void update(Player&, std::vector<Tear>&);
 };

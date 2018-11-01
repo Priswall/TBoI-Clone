@@ -1,7 +1,7 @@
 #include "SFML/Graphics.hpp"
 #include "Frame.h"
 
-Frame::Frame(sf::Sprite _sprite, int x, int y, int w, int h, double scalex, double scaley, int xoff, int yoff, int _frames)
+Frame::Frame(sf::Sprite& _sprite, int x, int y, int w, int h, double scalex, double scaley, int xoff, int yoff, int _frames)
 {
 	sprite = _sprite;
 	sprite.setTextureRect(sf::IntRect(x, y, w, h));

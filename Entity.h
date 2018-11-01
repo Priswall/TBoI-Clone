@@ -10,6 +10,7 @@ public:
 	sf::Vector2f pos;
 	sf::Vector2f vel;
 	EntityID entityID;
+	int frames = 0;
 
 	sf::Vector2f getPos();
 	sf::Sprite getSprite();

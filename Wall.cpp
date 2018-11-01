@@ -1,8 +1,5 @@
-#include "Enums.h"
 #include "SFML/Graphics.hpp"
-#include "Player.h"
 #include <iostream>
-#include "Tile.h"
 #include "Wall.h"
 
 
@@ -17,36 +14,60 @@ Wall::Wall(int x, int y, WallID ID, sf::Sprite& txtr)
 		Frame(txtr, 64, 0, 32, 32, 1, 1, 0, 0, 0)
 	};
 	sprite = frames[rand() % 3].getSprite();
-	sprite.setPosition(pos);
+	sprite.setPosition(pos.x - 2, pos.y - 2);
 };
 
-void Wall::update(Player& player)
+void Wall::update(Player& player, std::vector<Tear>& tears)
 {
 	//Top collision detection
-	if (player.pos.x + player.rect.width > pos.x + (player.maxSpeed - player.vel.x) && player.pos.x + player.rect.left < pos.x + ((32 + player.vel.x) - (player.maxSpeed + player.vel.x)) && player.pos.y + player.rect.height < pos.y + 10 && player.pos.y + player.rect.height > pos.y)
+	if (player.pos.x + player.rect.width > pos.x + (player.maxSpeed - player.vel.x) &&
+		player.pos.x + player.rect.left < (pos.x + 27) - (player.maxSpeed + player.vel.x) &&
+		player.pos.y - player.rect.height < pos.y + player.maxSpeed &&
+		player.pos.y - player.rect.height > pos.y &&
+		player.vel.y >= 0)
 	{
-		player.pos.y = pos.y + player.rect.top;
+		player.pos.y = pos.y + player.rect.height;
 		player.vel.y = 0;
 	}
 
 	//Bottom collision detection
-	if (player.pos.x + player.rect.width > pos.x + ((player.maxSpeed + 0.5) - player.vel.x) && player.pos.x + player.rect.left < pos.x + ((32 + player.vel.x) - (player.maxSpeed + player.vel.x)) && player.pos.y + player.rect.top < pos.y + 32 && player.pos.y + player.rect.top > pos.y + 22)
+	if (player.pos.x + player.rect.width > pos.x + (player.maxSpeed - player.vel.x) &&
+		player.pos.x + player.rect.left < (pos.x + 27) - (player.maxSpeed + player.vel.x) &&
+		player.pos.y + player.rect.top < pos.y + 27 &&
+		player.pos.y + player.rect.top > pos.y + (27 - player.maxSpeed) &&
+		player.vel.y <= 0)
 	{
-		player.pos.y = pos.y + player.rect.height + 32;
+		player.pos.y = pos.y + 27 - player.rect.top;
 		player.vel.y = 0;
 	}
 
 	//Left side collision detection
-	if (player.pos.x + player.rect.width < pos.x + 5 && player.pos.x + player.rect.width > pos.x && player.pos.y + player.rect.top < pos.y + ((32 + player.vel.y) - (player.maxSpeed + player.vel.y)) && player.pos.y + player.rect.height > pos.y + (player.maxSpeed - player.vel.y))
+	if (player.pos.x + player.rect.width < pos.x + player.maxSpeed &&
+		player.pos.x + player.rect.width > pos.x &&
+		player.pos.y + player.rect.top < (pos.y + 27) - (player.maxSpeed + player.vel.y) &&
+		player.pos.y - player.rect.height > pos.y + (player.maxSpeed - player.vel.y) &&
+		player.vel.x >= 0)
 	{
 		player.pos.x = pos.x + player.rect.left;
 		player.vel.x = 0;
 	}
 
 	//Right side collision detection
-	if (player.pos.x + player.rect.left < pos.x + 32 && player.pos.x + player.rect.left > pos.x + 27 && player.pos.y + player.rect.top < pos.y + ((32 + player.vel.y) - (player.maxSpeed + player.vel.y)) && player.pos.y + player.rect.height > pos.y + (player.maxSpeed - player.vel.y))
+	if (player.pos.x + player.rect.left < pos.x + 27 &&
+		player.pos.x + player.rect.left > pos.x + (27 - player.maxSpeed) &&
+		player.pos.y + player.rect.top < (pos.y + 27) - (player.maxSpeed + player.vel.y) &&
+		player.pos.y - player.rect.height > pos.y + (player.maxSpeed - player.vel.y) &&
+		player.vel.x <= 0)
 	{
-		player.pos.x = pos.x + player.rect.width + 32;
+		player.pos.x = pos.x + player.rect.width + 27;
 		player.vel.x = 0;
+	}
+
+	for (std::vector<Tear>::iterator tearIter = tears.begin(); tearIter != tears.end(); tearIter++)
+	{
+		if (tearIter->pos.x + 10 < pos.x + 27 && tearIter->pos.y - 16 < pos.y + 27 && tearIter->pos.x + 18 > pos.x && tearIter->pos.y - 8 > pos.y)
+		{
+			tearIter->splat.isPlaying = true;
+		}
 	}
 };
