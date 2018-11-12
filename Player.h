@@ -1,22 +1,18 @@
 #pragma once
-#include "Enums.h"
-#include "SFML/Graphics.hpp"
-#include <thread>
 #include <iostream>
-#include "Entity.h"
 #include "Tear.h"
-#include "Frame.h"
-#include "Animation.h"
 
 
 class Player : public Entity, public sf::Drawable {
 public:
+	bool mobile = true;
 	void update(std::vector<Tear>&);
 
 	Player(int, int, PlayerID, sf::Sprite&, Animation&);
 	Player() {};
 	PlayerID id;
 	sf::Sprite headSprite;
+	sf::Sprite bodySprite;
 	sf::Texture tearTexture;
 	Animation tearPoof;
 	Animation walkUp;

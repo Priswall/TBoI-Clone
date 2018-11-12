@@ -1,0 +1,53 @@
+<rooms>
+	<room name="Testing" difficulty="easy" size="1x1">
+		<wall id="test" x="52" y="52"/>
+		<door wall="L"/>
+		<door wall="R"/>
+		<door wall="U"/>
+		<door wall="D"/>
+	</room>
+	<room name="Testing1" difficulty="easy" size="1x1">
+		<wall id="test" x="52" y="52"/>
+		<wall id="test" x="52" y="79"/>
+		<wall id="test" x="79" y="52"/>
+		<wall id="test" x="79" y="79"/>
+		<door wall="L"/>
+		<door wall="R"/>
+		<door wall="U"/>
+		<door wall="D"/>
+	</room>
+	<room name="Testing1" difficulty="easy" size="1x1">
+		<wall id="test" x="52" y="52"/>
+		<wall id="test" x="52" y="79"/>
+		<wall id="test" x="52" y="106"/>
+		<wall id="test" x="79" y="52"/>
+		<wall id="test" x="79" y="79"/>
+		<wall id="test" x="106" y="52"/>
+		<door wall="L"/>
+		<door wall="R"/>
+		<door wall="U"/>
+		<door wall="D"/>
+	</room>
+	<room name="Testing1" difficulty="easy" size="1x1">
+		<wall id="test" x="52" y="52"/>
+		<wall id="test" x="52" y="79"/>
+		<wall id="test" x="52" y="106"/>
+		<wall id="test" x="79" y="52"/>
+		<wall id="test" x="79" y="79"/>
+		<wall id="test" x="106" y="52"/>
+		<door wall="L"/>
+		<door wall="R"/>
+		<door wall="U"/>
+		<door wall="D"/>
+	</room>
+	<room name="Testing1" difficulty="easy" size="1x1">
+		<wall id="test" x="52" y="52"/>
+		<wall id="test" x="52" y="79"/>
+		<wall id="test" x="79" y="79"/>
+		<wall id="test" x="106" y="52"/>
+		<door wall="L"/>
+		<door wall="R"/>
+		<door wall="U"/>
+		<door wall="D"/>
+	</room>
+</rooms>

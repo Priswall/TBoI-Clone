@@ -13,7 +13,7 @@ Fly::Fly(int x, int y, Animation& anim)
 void Fly::update(Player& player)
 {
 	animations[0].play();
-	sprite = animations[0].frames[animations[0].currentFrame].getSprite();
+	sprite = animations[0].frames[0][animations[0].currentFrame].getSprite();
 
 	targetPos = player.pos;
 
@@ -57,5 +57,5 @@ void Fly::update(Player& player)
 		pos.y = 22;
 	if (pos.y > 250)
 		pos.y = 250;
-	sprite.setPosition(pos - animations[0].frames[animations[0].currentFrame].offSet);
+	sprite.setPosition(pos - animations[0].frames[0][animations[0].currentFrame].offSet);
 }

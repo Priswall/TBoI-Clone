@@ -16,3 +16,10 @@ sf::RectangleShape Tile::getRect()
 {
 	return rect;
 };
+
+Tile::Tile() {};
+
+void Tile::update(Player& player, std::vector<Tear>& tears) const
+{
+	return;
+}

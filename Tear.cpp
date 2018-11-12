@@ -6,8 +6,8 @@ void Tear::update()
 {
 	frames++;
 	if (splat.isPlaying) {
-		sprite = splat.frames[splat.currentFrame].getSprite();
-		sprite.setPosition(pos - splat.frames[splat.currentFrame].offSet);
+		sprite = splat.frames[0][splat.currentFrame].getSprite();
+		sprite.setPosition(pos - splat.frames[0][splat.currentFrame].offSet);
 	}
 	else {
 		pos += vel;
