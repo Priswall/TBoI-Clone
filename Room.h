@@ -13,6 +13,7 @@ public:
 	std::vector<Entity> baseEntities;
 	std::vector<Entity> entities;
 	std::vector<Frame> backdrop;
+	std::vector<Frame> frames;
 	std::vector<Door> doors;
 	bool hasLeftDoor = false, hasRightDoor = false, hasUpDoor = false, hasDownDoor = false, firstEnter = false, cleared = false;
 	

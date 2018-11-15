@@ -5,16 +5,7 @@ Wall::Wall(int x, int y, WallID ID, sf::Sprite& txtr)
 	tileID = wall;
 	pos = sf::Vector2f(x, y);
 	id = ID;
-	frames = {
-		Frame(txtr, 0, 0, 32, 32, 1, 1, 0, 0, 0, 0, 0),
-		Frame(txtr, 32, 0, 32, 32, 1, 1, 0, 0, 0, 0, 0),
-		Frame(txtr, 64, 0, 32, 32, 1, 1, 0, 0, 0, 0, 0),
-		Frame(txtr, 0, 96, 32, 32, 1, 1, 0, 0, 0, 0, 0),
-		Frame(txtr, 32, 96, 32, 32, 1, 1, 0, 0, 0, 0, 0),
-		Frame(txtr, 0, 128, 32, 32, 1, 1, 0, 0, 0, 0, 0),
-		Frame(txtr, 32, 128, 32, 32, 1, 1, 0, 0, 0, 0, 0)
-	};
-	sprite = frames[(rand() % 3)].getSprite();
+	sprite = txtr;
 	sprite.setPosition(pos.x - 2, pos.y - 2);
 };
 

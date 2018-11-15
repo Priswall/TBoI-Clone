@@ -7,6 +7,11 @@ sf::Vector2f Tile::getPos()
 	return pos;
 };
 
+std::vector<Frame> Tile::getFrames()
+{
+	return frames;
+};
+
 sf::Sprite Tile::getSprite()
 {
 	return sprite;

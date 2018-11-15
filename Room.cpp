@@ -1,4 +1,5 @@
 #include "Room.h"
+#include "Tile.h"
 #include <string>
 
 using namespace tinyxml2;
@@ -45,9 +46,23 @@ Room Room::operator=(const Room& room)
 
 void Room::load(sf::Sprite& _sprite)
 {
+	frames = {
+		Frame(_sprite, 0, 0, 32, 32, 1, 1, 0, 0, 0, 0, 0),
+		Frame(_sprite, 32, 0, 32, 32, 1, 1, 0, 0, 0, 0, 0),
+		Frame(_sprite, 64, 0, 32, 32, 1, 1, 0, 0, 0, 0, 0),
+		Frame(_sprite, 0, 96, 32, 32, 1, 1, 0, 0, -1, -3, 0),
+		Frame(_sprite, 32, 96, 32, 32, 1, 1, 0, 0, 4, -3, 0),
+		Frame(_sprite, 0, 128, 32, 32, 1, 1, 0, 0, -1, 2, 0),
+		Frame(_sprite, 32, 128, 32, 32, 1, 1, 0, 0, 4, 2, 0),
+		Frame(_sprite, 0, 224, 32, 32, 1, 1, 0, 0, -3, -3, 0),
+		Frame(_sprite, 32, 224, 32, 32, 1, 1, 0, 0, 2, -3, 0),
+		Frame(_sprite, 0, 160, 32, 32, 1, 1, 0, 0, -1, -3, 0),
+		Frame(_sprite, 0, 192, 32, 32, 1, 1, 0, 0, -1, 2, 0)
+	};
 	doc.LoadFile("resources/rooms/testmap.xml");
 	XMLElement* root = doc.RootElement()->FirstChildElement("room");
-	for (int i = 0; i < rand() % 4; i++)
+	int k = rand() % 4;
+	for (int i = 0; i < k; i++)
 		root = root->NextSiblingElement("room");
 	roomSize = root->Attribute("size");
 	XMLElement* i = root->FirstChildElement("wall");
@@ -69,61 +84,123 @@ void Room::load(sf::Sprite& _sprite)
 			hasDownDoor = true;
 	}
 
-	for (int i = 0; i < tiles.size(); i++)
+	for (int i = 1; i < tiles.size(); i+=2)
 	{
-		for (int j = 0; j < tiles.size(); j++)
+		for (int j = 1; j < tiles.size(); j+=2)
 		{
 			if (tiles[i]->pos.x == tiles[j]->pos.x - 27 && tiles[i]->pos.y == tiles[j]->pos.y - 27)
 			{
-				tiles[i]->neighbors[0] = &*tiles[j];
+				tiles[i]->neighbors[0] = j;
 			}
 			else if (tiles[i]->pos.x == tiles[j]->pos.x && tiles[i]->pos.y == tiles[j]->pos.y - 27)
 			{
-				tiles[i]->neighbors[1] = &*tiles[j];
+				tiles[i]->neighbors[1] = j;
 			}
 			else if (tiles[i]->pos.x == tiles[j]->pos.x + 27 && tiles[i]->pos.y == tiles[j]->pos.y - 27)
 			{
-				tiles[i]->neighbors[2] = &*tiles[j];
+				tiles[i]->neighbors[2] = j;
 			}
 			else if (tiles[i]->pos.x == tiles[j]->pos.x - 27 && tiles[i]->pos.y == tiles[j]->pos.y)
 			{
-				tiles[i]->neighbors[3] = &*tiles[j];
+				tiles[i]->neighbors[3] = j;
 			}
 			else if (tiles[i]->pos.x == tiles[j]->pos.x + 27 && tiles[i]->pos.y == tiles[j]->pos.y)
 			{
-				tiles[i]->neighbors[4] = &*tiles[j];
+				tiles[i]->neighbors[4] = j;
 			}
 			else if (tiles[i]->pos.x == tiles[j]->pos.x - 27 && tiles[i]->pos.y == tiles[j]->pos.y + 27)
 			{
-				tiles[i]->neighbors[5] = &*tiles[j];
+				tiles[i]->neighbors[5] = j;
 			}
 			else if (tiles[i]->pos.x == tiles[j]->pos.x && tiles[i]->pos.y == tiles[j]->pos.y + 27)
 			{
-				tiles[i]->neighbors[6] = &*tiles[j];
+				tiles[i]->neighbors[6] = j;
 			}
 			else if (tiles[i]->pos.x == tiles[j]->pos.x + 27 && tiles[i]->pos.y == tiles[j]->pos.y + 27)
 			{
-				tiles[i]->neighbors[7] = &*tiles[j];
+				tiles[i]->neighbors[7] = j;
+			}
+		}
+
+		//Big rocks!!!
+
+		// [x][x][ ]
+		// [x][o][ ]
+		// [ ][ ][ ]
+		if (!tiles[i]->hasSprite &&
+			tiles[i]->neighbors[0] != NULL &&
+			tiles[i]->neighbors[1] != NULL &&
+			tiles[i]->neighbors[3] != NULL &&
+			rand() % 5 > 2)
+		{
+			if (!tiles[tiles[i]->neighbors[0]]->hasSprite &&
+				!tiles[tiles[i]->neighbors[1]]->hasSprite &&
+				!tiles[tiles[i]->neighbors[3]]->hasSprite)
+			{
+				tiles[tiles[i]->neighbors[0]]->sprite = frames[6].sprite;
+				tiles[tiles[i]->neighbors[3]]->sprite = frames[4].sprite;
+				tiles[tiles[i]->neighbors[1]]->sprite = frames[5].sprite;
+				tiles[i]->sprite = frames[3].sprite;
+
+				tiles[tiles[i]->neighbors[0]]->sprite.setPosition(tiles[tiles[i]->neighbors[0]]->pos + frames[6].offSet);
+				tiles[tiles[i]->neighbors[3]]->sprite.setPosition(tiles[tiles[i]->neighbors[3]]->pos + frames[4].offSet);
+				tiles[tiles[i]->neighbors[1]]->sprite.setPosition(tiles[tiles[i]->neighbors[1]]->pos + frames[5].offSet);
+				tiles[i]->sprite.setPosition(tiles[i]->pos + frames[3].offSet);
+
+				tiles[i]->hasSprite = true;
+				tiles[tiles[i]->neighbors[0]]->hasSprite = true;
+				tiles[tiles[i]->neighbors[1]]->hasSprite = true;
+				tiles[tiles[i]->neighbors[3]]->hasSprite = true;
+			}
+		}
+
+		// [ ][x][ ]
+		// [ ][o][ ]
+		// [ ][ ][ ]
+		if (!tiles[i]->hasSprite &&
+			tiles[i]->neighbors[1] != NULL &&
+			rand() % 5 > 2)
+		{
+			if (!tiles[tiles[i]->neighbors[1]]->hasSprite)
+			{
+				tiles[i]->sprite = frames[9].getSprite();
+				tiles[tiles[i]->neighbors[1]]->sprite = frames[10].getSprite();
+
+				tiles[i]->sprite.setPosition(tiles[i]->pos + frames[9].offSet);
+				tiles[tiles[i]->neighbors[1]]->sprite.setPosition(tiles[tiles[i]->neighbors[1]]->pos + frames[10].offSet);
+
+				tiles[i]->hasSprite = true;
+				tiles[tiles[i]->neighbors[1]]->hasSprite = true;
+			}
+		}
+
+		// [x][o][ ]
+		// [ ][ ][ ]
+		// [ ][ ][ ]
+		if (!tiles[i]->hasSprite &&
+			tiles[i]->neighbors[3] != NULL &&
+			rand() % 5 > 2)
+		{
+			if (!tiles[tiles[i]->neighbors[3]]->hasSprite)
+			{
+				tiles[i]->sprite = frames[7].getSprite();
+				tiles[tiles[i]->neighbors[3]]->sprite = frames[8].getSprite();
+
+				tiles[i]->sprite.setPosition(tiles[i]->pos + frames[7].offSet);
+				tiles[tiles[i]->neighbors[3]]->sprite.setPosition(tiles[tiles[i]->neighbors[3]]->pos + frames[8].offSet);
+
+				tiles[i]->hasSprite = true;
+				tiles[tiles[i]->neighbors[3]]->hasSprite = true;
 			}
 		}
 	}
 
-	for (int i = 0; i < tiles.size(); i++)
+	for (int i = 1; i < tiles.size(); i+=2)
 	{
-		// [x][x][ ]
-		// [x][o][ ]
-		// [ ][ ][ ]
-		
-		if (tiles[i]->neighbors[0] != nullptr && tiles[i]->neighbors[1] != nullptr && tiles[i]->neighbors[3] != nullptr && !tiles[i]->hasSprite && !tiles[i]->neighbors[0]->hasSprite && !tiles[i]->neighbors[1]->hasSprite && !tiles[i]->neighbors[3]->hasSprite)
+		if (!tiles[i]->hasSprite)
 		{
-			tiles[i]->neighbors[0]->sprite = tiles[i]->frames[3].sprite;
-			tiles[i]->neighbors[1]->sprite = tiles[i]->frames[4].sprite;
-			tiles[i]->neighbors[3]->sprite = tiles[i]->frames[5].sprite;
-			tiles[i]->sprite = tiles[i]->frames[6].sprite;
-			tiles[i]->hasSprite = true;
-			tiles[i]->neighbors[0]->hasSprite = true;
-			tiles[i]->neighbors[1]->hasSprite = true;
-			tiles[i]->neighbors[3]->hasSprite = true;
+			tiles[i]->sprite = frames[rand() % 3].getSprite();
+			tiles[i]->sprite.setPosition(tiles[i]->pos);
 		}
 	}
 }

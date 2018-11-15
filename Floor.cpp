@@ -5,8 +5,8 @@ void Floor::load(sf::Sprite& sprite, sf::Sprite& _sprite, Animation& anim)
 	if (!loaded)
 	{
 		
-		startRoom = sf::Vector2f(466 * 2, 0);
-		currentRoom = sf::Vector2f(466 * 2, 0);
+		startRoom = sf::Vector2f(0, 0);
+		currentRoom = sf::Vector2f(0, 0);
 		rooms.push_back(Room(0, 0, floor, sprite));
 		rooms.push_back(Room(466, 0, floor, sprite));
 		rooms.push_back(Room(466 * 2, 0, floor, sprite));

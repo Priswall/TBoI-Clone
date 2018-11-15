@@ -11,8 +11,8 @@ public:
 	sf::Sprite sprite;
 	sf::Vector2f pos;
 	TileID tileID;
-	Tile* neighbors[8];
-	bool hasSprite = false;
+	int neighbors[8];
+	bool hasSprite;
 	std::vector<Frame> frames;
 
 	Tile();
@@ -20,6 +20,8 @@ public:
 	virtual void update(Player &, std::vector<Tear>&) const;
 
 	sf::Vector2f getPos();
+
+	std::vector<Frame> getFrames();
 
 	sf::Sprite getSprite();
 
