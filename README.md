@@ -5,3 +5,5 @@ Right now this is very early stage, and I don't plan on making it completely sim
 
 Screenshot of version 0.0.1 (Alpha-Alpha)
 <img src="screenshot.png"/>
+
+All other screenshots are on my website
