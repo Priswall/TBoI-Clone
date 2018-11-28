@@ -29,7 +29,7 @@ void Player::update(std::vector<Tear>& tears)
 			bodySprite.setPosition(0, 11);
 			headSprite = headUp.frames[0][0].getSprite();
 		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && !sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 		{
 			down = true;
 			if (walkUp.isPlaying)
@@ -52,7 +52,7 @@ void Player::update(std::vector<Tear>& tears)
 			headSprite = headLeft.frames[0][0].getSprite();
 			headSprite.setPosition(-headLeft.frames[0][0].offSet.x * 2, 0);
 		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && !sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 		{
 			right = true;
 			if (walkLeft.isPlaying)
@@ -232,7 +232,7 @@ Player::Player(int x, int y, PlayerID ID, sf::Sprite& txtr, Animation& tearSplat
 	id = ID;
 	rect = sf::IntRect(-7, -8, 7, 1);
 	maxSpeed = 2.5;
-	acc = 0.15;
+	acc = 0.2;
 
 	std::vector< std::vector<Frame>> temp = { {
 		Frame(txtr, 224, 0, 32, 32, 1, 1, 0, 0, 0, 27, 4),

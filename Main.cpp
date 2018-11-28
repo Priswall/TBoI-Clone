@@ -13,7 +13,6 @@ bool loaded = false;
 sf::Sprite sprite;
 Player player1;
 
-std::vector<Wall> walls;
 std::deque<std::shared_ptr<Entity>> entities;
 std::vector<Tear> tears;
 std::vector<sf::Sprite> sprites;
@@ -27,6 +26,7 @@ sf::Texture texture2;
 sf::Texture texture3;
 sf::Texture texture4;
 sf::Texture texture5;
+sf::Texture texture6;
 Animation open;
 sf::Music song;
 sf::Music layer;
@@ -52,6 +52,9 @@ void load()
 	images.push_back(sprite);
 	texture2.loadFromFile("resources/gfx/basement_backdrop.png");
 	sprite.setTexture(texture2);
+	images.push_back(sprite);
+	texture6.loadFromFile("resources/gfx/pit.png");
+	sprite.setTexture(texture6);
 	images.push_back(sprite);
 	texture3.loadFromFile("resources/gfx/tearpoof.png");
 	sprite.setTexture(texture3);
@@ -125,15 +128,6 @@ void load()
 	};
 	open.load(tempF);
 
-	texture4.loadFromFile("resources/gfx/enemies/fly.png");
-	sprite.setTexture(texture4);
-	temp = { {
-		Frame(sprite, 0, 0, 32, 32, 0.8, 0.8, 16, 24, 0, -4, 2),
-		Frame(sprite, 32, 0, 32, 32, 0.8, 0.8, 16, 24, 0, -4, 2)
-	} };
-	tempAnim.load(temp);
-	animations.push_back(tempAnim);
-
 	//Load sounds and music
 	sf::SoundBuffer s;
 	s.loadFromFile("resources/sfx/splatter 0.wav");
@@ -150,7 +144,7 @@ void load()
 	song.setVolume(50);
 
 	_floor = Floor(basement);
-	_floor.load(images[2], images[1], open);
+	_floor.load(images[2], images[1], images[3], open);
 
 	player1 = Player(_floor.startRoom.x + 233, _floor.startRoom.y + 155, first, images[0], animations[0]);
 	cam = sf::Vector2f(player1.pos);
@@ -228,15 +222,10 @@ int main()
 				layer.play();
 			}
 
-			if(camTransition == sf::Vector2f(0, 0))
+			if (camTransition == sf::Vector2f(0, 0))
 				player1.update(tears);
 
 			sf::Transform transform;
-
-			for (std::vector<Fly>::iterator flyIter = flies.begin(); flyIter != flies.end(); flyIter++)
-			{
-				flyIter->update(player1);
-			}
 
 			for (std::vector<Tear>::iterator tearIter = tears.begin(); tearIter != tears.end();)
 			{
@@ -265,6 +254,10 @@ int main()
 					room->update(player1, tears);
 					for (int i = 0; i < room->tiles.size(); i++)
 						room->tiles[i]->update(player1, tears);
+					for (int i = 1; i < room->entities.size(); i += 2)
+						room->entities[i]->update(player1, room->tiles);
+					for (int i = 0; i < room->holes.size(); i++)
+						room->holes[i].update(player1, tears);
 					for (int i = 0; i < room->doors.size(); i++)
 						room->doors[i].update(entities);
 
@@ -351,48 +344,39 @@ int main()
 				}
 			}
 
-			for (std::vector<Fly>::iterator flyIter = flies.begin(); flyIter != flies.end(); flyIter++)
-			{
-				maint.draw(flyIter->getSprite(), transform);
-			}
-
-			for (std::vector<Tear>::iterator tearIter = tears.begin(); tearIter != tears.end(); tearIter++)
-			{
-				maint.draw(tearIter->getSprite(), transform);
-			}
-
 			for (std::vector<Room>::iterator roomIter = _floor.rooms.begin(); roomIter != _floor.rooms.end(); roomIter++)
 			{
 				if (roomIter->pos == _floor.currentRoom || roomIter->pos == roomTransition)
 				{
 					for (int i = 0; i < roomIter->tiles.size(); i++)
 						maint.draw(roomIter->tiles[i]->getSprite(), transform);
+					for (int i = 0; i < roomIter->holes.size(); i++)
+						maint.draw(roomIter->holes[i].getSprite(), transform);
 					for (int i = 0; i < roomIter->doors.size(); i++)
-					{
 						maint.draw(roomIter->doors[i].sprite, transform);
-					}
+					for (int i = 1; i < roomIter->entities.size(); i += 2)
+						maint.draw(roomIter->entities[i]->sprite, transform);
 				}
+			}
+
+			//Shooting animation is broken, so I have temporarily disabled it
+			tears.clear();
+			for (std::vector<Tear>::iterator tearIter = tears.begin(); tearIter != tears.end(); tearIter++)
+			{
+				maint.draw(tearIter->getSprite(), transform);
 			}
 
 			maint.draw(player1, transform);
 
 			//This code bracked handles the GUI
 			{
-				for (std::vector<Room>::iterator roomIter = _floor.rooms.begin(); roomIter != _floor.rooms.end(); roomIter++)
+				for (int i = 0; i < _floor.rooms.size(); i++)
 				{
-					sf::RectangleShape rect(sf::Vector2f(4, 4));
-					rect.setPosition(((roomIter->pos.x / 466) * 5), 50 - ((roomIter->pos.y / 310) * 5));
-					rect.setFillColor(sf::Color::Blue);
-					if (roomIter->pos == _floor.currentRoom)
-						rect.setFillColor(sf::Color::Cyan);
-					maint.draw(rect);
-				}
-
-				for (double i = 0.0; i < volume; i += 0.1)
-				{
-					sf::RectangleShape rect(sf::Vector2f(5, 10));
-					rect.setPosition(3 + (i * 26), maint.getSize().y - 13);
-					rect.setFillColor(sf::Color::Blue);
+					sf::RectangleShape rect(sf::Vector2f(20, 20));
+					rect.setPosition((_floor.rooms[i].pos.x / 466) * 23, (_floor.rooms[i].pos.y / 310) * 23);
+					rect.setFillColor(sf::Color(200, 200, 200));
+					if (_floor.rooms[i].pos == _floor.currentRoom)
+						rect.setFillColor(sf::Color(255, 255, 255));
 					maint.draw(rect);
 				}
 			}

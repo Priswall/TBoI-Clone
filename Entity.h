@@ -11,6 +11,7 @@ public:
 	sf::Vector2f vel;
 	EntityID entityID;
 	int frames = 0;
+	bool alive = true;
 
 	sf::Vector2f getPos();
 	sf::Sprite getSprite();

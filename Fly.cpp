@@ -5,15 +5,14 @@ Fly::Fly(int x, int y, Animation& anim)
 {
 	pos = sf::Vector2f(x, y);
 	anim.loop = true;
-	anim.isPlaying = true;
 	animations.push_back(anim);
 	acc = 0.1;
 }
 
-void Fly::update(Player& player)
+void Fly::update(Player& player, std::deque<std::shared_ptr<Tile>> tiles)
 {
+	animations[0].isPlaying = true;
 	animations[0].play();
-	sprite = animations[0].frames[0][animations[0].currentFrame].getSprite();
 
 	targetPos = player.pos;
 
@@ -22,7 +21,7 @@ void Fly::update(Player& player)
 		timer++;
 	if (timer % 20 == 0)
 		t = 9;
-	if(t > 0)
+	if (t > 0)
 		vel += sf::Vector2f((rand() % 3) - 1, (rand() % 3) - 1);
 	if (vel.x < -2)
 		vel.x = -2;
@@ -57,5 +56,6 @@ void Fly::update(Player& player)
 		pos.y = 22;
 	if (pos.y > 250)
 		pos.y = 250;
+	sprite = animations[0].frames[0][animations[0].currentFrame].getSprite();
 	sprite.setPosition(pos - animations[0].frames[0][animations[0].currentFrame].offSet);
 }

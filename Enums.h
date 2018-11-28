@@ -2,7 +2,7 @@
 
 enum TileID {wall, hole, entity};
 enum TearFlag {normal, bloody, scythe};
-enum WallID {test, tt, ttt, tttt};
+enum WallID {test, black};
 enum EntityID {
 	player, 
 	enemy, 
@@ -22,3 +22,4 @@ enum EnemyID {
 enum FloorID {basement};
 enum DoorID {_normal, boss, secret, locked, chained, barred};
 enum DoorWall {up, down, left, right};
+enum HoleID {TL, T, TR, L, M, R, BL, B, BR};

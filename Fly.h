@@ -8,5 +8,6 @@ public:
 	int timer = 0, t = 0;
 	double acc = 0.01;
 	Fly(int, int, Animation&);
-	void update(Player&);
+
+	void update(Player&, std::deque<std::shared_ptr<Tile>>) override;
 };

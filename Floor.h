@@ -12,5 +12,5 @@ public:
 
 	Floor();
 	Floor(FloorID);
-	void load(sf::Sprite&, sf::Sprite&, Animation&);
+	void load(sf::Sprite&, sf::Sprite&, sf::Sprite&, Animation&);
 };
